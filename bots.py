@@ -16,9 +16,11 @@ class Game:
         self.oppenent2_speed = 7
         self.oppenent2_scores = 0
         self.oppenent1_scores = 0
+        self.right_line = WIDTH-20
+        self.left_line = 10
         self.ball = pygame.Rect(WIDTH/2-15 ,HEIGHT/2-15,30,30)
-        self.oppenent2 = pygame.Rect(WIDTH-20,HEIGHT/2 - 70,10,140)
-        self.oppenent1 = pygame.Rect(10,HEIGHT/2 - 70, 10,140)
+        self.oppenent2 = pygame.Rect(self.right_line, HEIGHT/2 - 70, 10, 140)
+        self.oppenent1 = pygame.Rect(self.left_line, HEIGHT/2 - 70, 10, 140)
         self.bg_color = pygame.Color('black')
         self.text_font = pygame.font.SysFont('Arial', 30)
 
@@ -50,11 +52,11 @@ class Game:
         if self.ball.top<=0 or self.ball.bottom >= HEIGHT:
             self.ball_speed_y *= -1
         
-        if self.ball.left<=0:
+        if self.ball.left <= self.left_line:
             self.oppenent2_scores +=1
             self.ball_restart()
     
-        if self.ball.right >= WIDTH:
+        if self.ball.right >= self.right_line + 5:
             self.oppenent1_scores +=1
             self.ball_restart()
 
