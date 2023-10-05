@@ -81,11 +81,15 @@ class Game:
                     
         if self.ball.colliderect(self.player) or self.ball.colliderect(self.oppenent):
             self.ball_speed_x *= -1
+        
+        if self.ball.colliderect(self.oppenent):
+            self.reset_destination()
 
     def ball_restart(self):
         self.ball.center = (WIDTH/2, HEIGHT/2)
         self.ball_speed_y *= random.choice((1, -1))
         self.ball_speed_x *= random.choice((1, -1))
+        self.reset_destination()
 
     def player_animation(self):
         self.player.y += self.player_speed
@@ -93,25 +97,8 @@ class Game:
             self.player.top = 0
         if self.player.bottom >= HEIGHT:
             self.player.bottom = HEIGHT
-
-    def oppenent_animation(self):
-        if self.destination != -1:
-            self.reach_destination()
-            return
-        if self.oppenent.top < self.ball.y:
-            self.oppenent.top += self.oppenent_speed
-        if self.oppenent.bottom > self.ball.y:
-            self.oppenent.bottom -= self.oppenent_speed
-        
-        if self.oppenent.top <= 0:
-            self.oppenent.top = 0
-        if self.oppenent.bottom >= HEIGHT:
-            self.oppenent.bottom = HEIGHT
     
     def predict_ball_destination(self):
-        if self.ball_speed_x > 0:
-            self.destination = -1
-            return
         if self.destination != -1:
             return
         
@@ -132,11 +119,14 @@ class Game:
             if ball_top <= 0 or ball_bottom >= HEIGHT:
                 ball_speed_y *= -1
             
+            if ball_right >= self.player.left:
+                ball_speed_x *= -1
+
             if ball_left <= self.left_line:
                 self.destination = (ball_top + ball_bottom) // 2
                 return
     
-    def reach_destination(self):
+    def oppenent_animation(self):
         if self.destination == -1:
             return
         
@@ -149,6 +139,9 @@ class Game:
             self.oppenent.top = 0
         if self.oppenent.bottom >= HEIGHT:
             self.oppenent.bottom = HEIGHT
+    
+    def reset_destination(self):
+        self.destination = -1
         
 
 if __name__ == "__main__":
